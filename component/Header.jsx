@@ -25,9 +25,11 @@ export default function Header({ locations = [], products = [] }) {
     router.push(`/${slug}`);
   };
 
-  const handleProductSelect = (citySlug, productSlug) => {
+  const handleProductSelect = (productSlug) => {
     setMenuOpen(false);
     setProductDropdown(false);
+    // Get current city slug from URL if present, fallback to 'isanpur'
+    let citySlug = router.query?.params?.[0] || getIsanpurSlug();
     router.push(`/${citySlug}/${productSlug}`);
   };
 
@@ -52,6 +54,16 @@ export default function Header({ locations = [], products = [] }) {
   };
 
   const uniqueCities = getUniqueCities();
+
+  // Utility function to get Isanpur slug
+  function getIsanpurSlug() {
+    const isanpur = locations.find(
+      (loc) =>
+        (loc.city?.name?.toLowerCase?.() === "isanpur") ||
+        (loc.name?.toLowerCase?.() === "isanpur")
+    );
+    return isanpur?.slug || "isanpur";
+  }
 
   const navLinks = [
     { id: "features", label: "Features" },
@@ -99,7 +111,7 @@ export default function Header({ locations = [], products = [] }) {
                     <button
                       key={product.slug}
                       className="flex items-start gap-3 w-full text-left px-4 py-3 hover:bg-purple-50 text-gray-700 border-b last:border-b-0 border-purple-50 transition-colors duration-300"
-                      onClick={() => handleProductSelect(uniqueCities[0]?.slug || 'ahmedabad', product.slug)}
+                      onClick={() => handleProductSelect(product.slug)}
                     >
                       <img
                         src={product.logoUrl || '/favicon.ico'}
@@ -157,7 +169,7 @@ export default function Header({ locations = [], products = [] }) {
                     <button
                       key={product.slug}
                       className="flex items-start gap-3 w-full text-left px-4 py-3 hover:bg-purple-50 text-gray-700 border-b last:border-b-0 border-purple-50 transition-colors duration-300"
-                      onClick={() => handleProductSelect(uniqueCities[0]?.slug || 'ahmedabad', product.slug)}
+                      onClick={() => handleProductSelect(product.slug)}
                     >
                       <img
                         src={product.logoUrl || '/favicon.ico'}

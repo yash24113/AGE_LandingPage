@@ -108,33 +108,25 @@ export default function CityProductPage() {
           const foundLocation = locationData.find(
             (loc) => loc.slug === citySlug
           );
-          if (foundLocation && foundLocation.name) {
-            setCity(foundLocation.name);
-          } else {
-            // If location not found, try to find by location name directly
-            const locationBySlugName = locationData.find(
-              (loc) =>
-                loc.name &&
-                loc.name.toLowerCase() === citySlug.toLowerCase()
-            );
-            if (locationBySlugName && locationBySlugName.name) {
-              setCity(locationBySlugName.name);
-            } else {
-              setCity("Isanpur"); // Default fallback
-            }
-          }
-
           // Find product by slug
           const foundProduct = productData.find(
             (prod) => prod.slug === productSlug
           );
-          if (foundProduct && foundProduct.name) {
-            setProduct(foundProduct.name);
-            setDescription(foundProduct.description || "");
-          } else {
-            setProduct("Fabric"); // Default fallback
-            setDescription("Premium fabric solutions for your business needs");
+
+          if (!foundLocation) {
+            // Redirect to default if location not found
+            router.replace(`/isanpur/${productSlug || "fabric"}`);
+            return;
           }
+          if (!foundProduct) {
+            // Redirect to default product if product not found
+            router.replace(`/${citySlug}/fabric`);
+            return;
+          }
+
+          setCity(foundLocation.name);
+          setProduct(foundProduct.name);
+          setDescription(foundProduct.description || "");
         } else if (params && params.length === 1) {
           // Handle case: /[slug] (e.g., /isanpur)
           const citySlug = params[0];
@@ -142,21 +134,12 @@ export default function CityProductPage() {
           const foundLocation = locationData.find(
             (loc) => loc.slug === citySlug
           );
-          if (foundLocation && foundLocation.name) {
-            setCity(foundLocation.name);
-          } else {
-            // If location not found, try to find by location name directly
-            const locationBySlugName = locationData.find(
-              (loc) =>
-                loc.name &&
-                loc.name.toLowerCase() === citySlug.toLowerCase()
-            );
-            if (locationBySlugName && locationBySlugName.name) {
-              setCity(locationBySlugName.name);
-            } else {
-              setCity("Isanpur"); // Default fallback if slug not matched
-            }
+          if (!foundLocation) {
+            // Redirect to default if location not found
+            router.replace("/isanpur");
+            return;
           }
+          setCity(foundLocation.name);
           setProduct("Fabric"); // Default product
           setDescription("Premium fabric solutions for your business needs");
         } else {
@@ -334,6 +317,16 @@ export default function CityProductPage() {
               );
               setProduct(selectedProduct);
               setDescription(selectedProductObj?.description || "");
+
+              // Find city slug from locations
+              const cityObj = locations.find(
+                (loc) => loc.name === city
+              );
+              const citySlug = cityObj ? cityObj.slug : "isanpur";
+              // Find product slug from products
+              const productSlug = selectedProductObj ? selectedProductObj.slug : "fabric";
+              // Push new URL
+              router.push(`/${citySlug}/${productSlug}`);
             }}
             className="border rounded px-4 py-2"
           >
