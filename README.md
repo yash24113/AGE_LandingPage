@@ -31,3 +31,4 @@
 - Uses slugs for clean URLs.
 - Add/remove cities or products in MongoDB, then rebuild to update pages.
 - Uses ISR (Incremental Static Regeneration) for on-demand updates. "# Frontend_Landingpage" 
+"# AGE_LandingPage" 

@@ -76,7 +76,7 @@ export default function Header({ locations = [], products = [] }) {
                 e.target.parentNode.insertAdjacentHTML('beforeend', '<span class="text-xl font-bold">AGE</span>'); 
               }}
             />
-            <span className="text-xl font-bold gradient-text">
+            <span className="text-xl font-bold gradient-text leading-tight">
               Amrita Global Enterprises
             </span>
           </a>
