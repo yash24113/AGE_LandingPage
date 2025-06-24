@@ -115,12 +115,12 @@ export default function CityProductPage() {
 
           if (!foundLocation) {
             // Redirect to default if location not found
-            router.replace(/isanpur/${productSlug || "fabric"});
+            router.replace(`/isanpur/${productSlug || "fabric"}`);
             return;
           }
           if (!foundProduct) {
             // Redirect to default product if product not found
-            router.replace(/${citySlug}/fabric);
+            router.replace(`/${citySlug}/fabric`);
             return;
           }
 
@@ -326,7 +326,7 @@ export default function CityProductPage() {
               // Find product slug from products
               const productSlug = selectedProductObj ? selectedProductObj.slug : "fabric";
               // Push new URL
-              router.push(/${citySlug}/${productSlug});
+              router.push(`/${citySlug}/${productSlug}`);
             }}
             className="border rounded px-4 py-2"
           >
@@ -528,7 +528,7 @@ export default function CityProductPage() {
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
                   currentSlide === index ? "bg-white scale-125" : "bg-white/50"
                 }`}
-                aria-label={Go to slide ${index + 1}}
+                aria-label={`Go to slide ${index + 1}`}
               />
             ))}
           </div>
@@ -611,10 +611,10 @@ export default function CityProductPage() {
                 <div
                   key={index}
                   className="group text-center p-8 card animate-slide-up"
-                  style={{ animationDelay: ${index * 0.2}s }}
+                  style={{ animationDelay: `${index * 0.2}s` }}
                 >
                   <div
-                    className={text-4xl mb-4 bg-gradient-to-r ${feature.color} bg-clip-text text-transparent}
+                    className={`text-4xl mb-4 bg-gradient-to-r ${feature.color} bg-clip-text text-transparent`}
                   >
                     {feature.icon}
                   </div>
@@ -641,7 +641,7 @@ export default function CityProductPage() {
                 <div
                   key={index}
                   className="group relative card overflow-hidden animate-slide-up"
-                  style={{ animationDelay: ${index * 0.1}s }}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="h-64 relative">
                     <Image
@@ -652,7 +652,7 @@ export default function CityProductPage() {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />
                     <div
-                      className={absolute inset-0 bg-gradient-to-b ${category.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300}
+                      className={`absolute inset-0 bg-gradient-to-b ${category.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
                     />
                   </div>
                   <div className="p-6 relative">
