@@ -10,16 +10,16 @@ function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export default function CityProductPage() {
+export default function CityProductPage({
+  locations = [],
+  products = [],
+  city = "Isanpur",
+  product = "Fabric",
+  description = "Premium fabric solutions for your business needs",
+}) {
   const router = useRouter();
   const { params } = router.query;
 
-  const [city, setCity] = useState("Isanpur");
-  const [product, setProduct] = useState("Fabric");
-  const [locations, setLocations] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(true);
   const [showInquiryForm, setShowInquiryForm] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -85,82 +85,6 @@ export default function CityProductPage() {
     }
   }
 
-  // Fetch locations and product data from APIs
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const [locationRes, productRes] = await Promise.all([
-          fetch("https://langingpage-production-f27f.up.railway.app/api/locations"),
-          fetch("https://langingpage-production-f27f.up.railway.app/api/products"),
-        ]);
-        const locationData = await locationRes.json();
-        const productData = await productRes.json();
-        setLocations(locationData);
-        setProducts(productData);
-
-        // Handle URL parameters for dynamic routing
-        if (params && params.length >= 2) {
-          const citySlug = params[0];
-          const productSlug = params[1];
-
-          // Find location by slug
-          const foundLocation = locationData.find(
-            (loc) => loc.slug === citySlug
-          );
-          // Find product by slug
-          const foundProduct = productData.find(
-            (prod) => prod.slug === productSlug
-          );
-
-          if (!foundLocation) {
-            // Redirect to default if location not found
-            router.replace(`/isanpur/${productSlug || "fabric"}`);
-            return;
-          }
-          if (!foundProduct) {
-            // Redirect to default product if product not found
-            router.replace(`/${citySlug}/fabric`);
-            return;
-          }
-
-          setCity(foundLocation.name);
-          setProduct(foundProduct.name);
-          setDescription(foundProduct.description || "");
-        } else if (params && params.length === 1) {
-          // Handle case: /[slug] (e.g., /isanpur)
-          const citySlug = params[0];
-          // Find location by slug
-          const foundLocation = locationData.find(
-            (loc) => loc.slug === citySlug
-          );
-          if (!foundLocation) {
-            // Redirect to default if location not found
-            router.replace("/isanpur");
-            return;
-          }
-          setCity(foundLocation.name);
-          setProduct("Fabric"); // Default product
-          setDescription("Premium fabric solutions for your business needs");
-        } else {
-          // Default values
-          setCity("Isanpur");
-          setProduct("Fabric");
-          setDescription("Premium fabric solutions for your business needs");
-        }
-      } catch (err) {
-        setCity("Isanpur");
-        setProduct("Fabric");
-        setDescription("Premium fabric solutions for your business needs");
-      }
-      setLoading(false);
-    }
-
-    if (router.isReady) {
-      fetchData();
-    }
-  }, [router.isReady, params]);
-
   const slides = [
     {
       image:
@@ -219,14 +143,6 @@ export default function CityProductPage() {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-xl font-semibold">
-        Loading...
-      </div>
-    );
-  }
 
   // Multi-step form handlers
   const handleFormChange = (e) => {
@@ -315,18 +231,7 @@ export default function CityProductPage() {
               const selectedProductObj = products.find(
                 (prod) => prod.name === selectedProduct
               );
-              setProduct(selectedProduct);
-              setDescription(selectedProductObj?.description || "");
-
-              // Find city slug from locations
-              const cityObj = locations.find(
-                (loc) => loc.name === city
-              );
-              const citySlug = cityObj ? cityObj.slug : "isanpur";
-              // Find product slug from products
-              const productSlug = selectedProductObj ? selectedProductObj.slug : "fabric";
-              // Push new URL
-              router.push(`/${citySlug}/${productSlug}`);
+              router.push(`/${city}/${selectedProduct}`);
             }}
             className="border rounded px-4 py-2"
           >
@@ -825,4 +730,71 @@ export default function CityProductPage() {
       </div>
     </>
   );
+}
+
+// ISR: getStaticPaths and getStaticProps
+export async function getStaticPaths() {
+  // Fetch all locations and products
+  const [locationsRes, productsRes] = await Promise.all([
+    fetch("https://langingpage-production-f27f.up.railway.app/api/locations"),
+    fetch("https://langingpage-production-f27f.up.railway.app/api/products"),
+  ]);
+  const locations = await locationsRes.json();
+  const products = await productsRes.json();
+
+  // Generate all city/product paths
+  const paths = [];
+  locations.forEach((loc) => {
+    products.forEach((prod) => {
+      paths.push({ params: { params: [loc.slug, prod.slug] } });
+    });
+    // Also add city-only path
+    paths.push({ params: { params: [loc.slug] } });
+  });
+
+  return {
+    paths,
+    fallback: "blocking", // Fast rendering for new content
+  };
+}
+
+export async function getStaticProps({ params }) {
+  // Fetch all locations and products
+  const [locationsRes, productsRes] = await Promise.all([
+    fetch("https://langingpage-production-f27f.up.railway.app/api/locations"),
+    fetch("https://langingpage-production-f27f.up.railway.app/api/products"),
+  ]);
+  const locations = await locationsRes.json();
+  const products = await productsRes.json();
+
+  let city = "Isanpur";
+  let product = "Fabric";
+  let description = "Premium fabric solutions for your business needs";
+
+  if (params?.params?.length >= 2) {
+    const citySlug = params.params[0];
+    const productSlug = params.params[1];
+    const foundLocation = locations.find((loc) => loc.slug === citySlug);
+    const foundProduct = products.find((prod) => prod.slug === productSlug);
+    if (foundLocation) city = foundLocation.name;
+    if (foundProduct) {
+      product = foundProduct.name;
+      description = foundProduct.description || description;
+    }
+  } else if (params?.params?.length === 1) {
+    const citySlug = params.params[0];
+    const foundLocation = locations.find((loc) => loc.slug === citySlug);
+    if (foundLocation) city = foundLocation.name;
+  }
+
+  return {
+    props: {
+      locations,
+      products,
+      city,
+      product,
+      description,
+    },
+    revalidate: 60, // ISR: revalidate every 60 seconds
+  };
 }
