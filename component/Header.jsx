@@ -80,9 +80,9 @@ export default function Header({ locations = [], products = [] }) {
           {/* Logo */}
           <a href="/" className="flex items-center space-x-2 group">
             <img
-              src="/logo.svg"
+              src="https://amritafashions.com/wp-content/uploads/amrita-fashions-small-logo-india.webp"
               alt="Amrita Global Enterprise Logo"
-              className="h-10 w-10 object-contain group-hover:scale-110 transition-transform duration-300"
+              className="h-11 w-11 object-contain group-hover:scale-110 transition-transform duration-300"
               onError={e => { 
                 e.target.style.display = 'none'; 
                 e.target.parentNode.insertAdjacentHTML('beforeend', '<span class="text-xl font-bold">AGE</span>'); 
