@@ -297,7 +297,7 @@ export default function CityProductPage() {
           )}. Quality fabrics, denim, and turf products for your business.`}
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="https://amritafashions.com/wp-content/uploads/amrita-fashions-company-logo-150x150.webp" sizes="32x32" />
         <meta name="theme-color" content="#9333ea" />
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
