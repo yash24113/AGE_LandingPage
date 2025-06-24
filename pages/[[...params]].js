@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Header from "../component/Header";
+import { Button } from "../component/ui/button";
 
 // Utility function to capitalize the first letter
 function capitalizeFirst(str) {
@@ -108,25 +109,33 @@ export default function CityProductPage() {
           const foundLocation = locationData.find(
             (loc) => loc.slug === citySlug
           );
+          if (foundLocation && foundLocation.name) {
+            setCity(foundLocation.name);
+          } else {
+            // If location not found, try to find by location name directly
+            const locationBySlugName = locationData.find(
+              (loc) =>
+                loc.name &&
+                loc.name.toLowerCase() === citySlug.toLowerCase()
+            );
+            if (locationBySlugName && locationBySlugName.name) {
+              setCity(locationBySlugName.name);
+            } else {
+              setCity("Isanpur"); // Default fallback
+            }
+          }
+
           // Find product by slug
           const foundProduct = productData.find(
             (prod) => prod.slug === productSlug
           );
-
-          if (!foundLocation) {
-            // Redirect to default if location not found
-            router.replace(`/isanpur/${productSlug || "fabric"}`);
-            return;
+          if (foundProduct && foundProduct.name) {
+            setProduct(foundProduct.name);
+            setDescription(foundProduct.description || "");
+          } else {
+            setProduct("Fabric"); // Default fallback
+            setDescription("Premium fabric solutions for your business needs");
           }
-          if (!foundProduct) {
-            // Redirect to default product if product not found
-            router.replace(`/${citySlug}/fabric`);
-            return;
-          }
-
-          setCity(foundLocation.name);
-          setProduct(foundProduct.name);
-          setDescription(foundProduct.description || "");
         } else if (params && params.length === 1) {
           // Handle case: /[slug] (e.g., /isanpur)
           const citySlug = params[0];
@@ -134,12 +143,21 @@ export default function CityProductPage() {
           const foundLocation = locationData.find(
             (loc) => loc.slug === citySlug
           );
-          if (!foundLocation) {
-            // Redirect to default if location not found
-            router.replace("/isanpur");
-            return;
+          if (foundLocation && foundLocation.name) {
+            setCity(foundLocation.name);
+          } else {
+            // If location not found, try to find by location name directly
+            const locationBySlugName = locationData.find(
+              (loc) =>
+                loc.name &&
+                loc.name.toLowerCase() === citySlug.toLowerCase()
+            );
+            if (locationBySlugName && locationBySlugName.name) {
+              setCity(locationBySlugName.name);
+            } else {
+              setCity("Isanpur"); // Default fallback if slug not matched
+            }
           }
-          setCity(foundLocation.name);
           setProduct("Fabric"); // Default product
           setDescription("Premium fabric solutions for your business needs");
         } else {
@@ -166,7 +184,7 @@ export default function CityProductPage() {
       image:
         "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1200&q=80",
       title: "Premium Denim Collection",
-      description: "Wholesale denim fabrics for manufacturers and brands",
+      description: "Wholesale denim fabrics for manufacturers and brands YASHH",
     },
     {
       image:
@@ -284,7 +302,7 @@ export default function CityProductPage() {
     <>
       <Head>
         <title>
-          {`Amrita Global Enterprises | Premium ${capitalizeFirst(
+          {`YASH Global Enterprises | Premium ${capitalizeFirst(
             product
           )} in ${capitalizeFirst(city)}`}
         </title>
@@ -366,7 +384,7 @@ export default function CityProductPage() {
 
         {/* Business Inquiry Button - left center, hidden when modal open */}
         {!showInquiryForm && (
-          <div className="fixed bottom-6 left-6 z-50 group">
+          <div className="fixed left-5 top-1/2 -translate-y-1/2 z-50 group">
             <div className="relative">
               <div className="absolute -inset-1 bg-purple-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
               <button
@@ -396,20 +414,18 @@ export default function CityProductPage() {
 
         {/* Business Inquiry Multi-step Form - left side center modal, no left margin */}
         {showInquiryForm && (
-          <div className="fixed bottom-2 sm:left-6 left-0 z-50 sm:w-[400px] w-full group items-center justify-start p-4  animate-fade-in">
-            <div className="bg-white rounded-lg p-1   max-w-md w-full relative animate-scale-in shadow-xl">
+          <div className="fixed inset-0 z-50 flex items-center justify-start p-4 animate-fade-in">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full relative animate-scale-in shadow-xl">
               <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg blur opacity-75"></div>
               <div className="relative bg-white rounded-lg p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-semibold">Business Inquiry</h3>
                   <button
                     onClick={() => setShowInquiryForm(false)}
-                    className="font-gradient-to-r from-purple-500 to-pink-500 opacity:0.4 hover:text-gray-700 transition-colors duration-300"
-                    
-                 >
+                    className="text-gray-500 hover:text-gray-700 transition-colors duration-300"
+                  >
                     <svg
-                      className="w-8 h-8 text-purple-800 hover:text-purple-400 transition-colors duration-300"
-                    
+                      className="w-6 h-6"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -436,7 +452,7 @@ export default function CityProductPage() {
                         placeholder={formFields[formStep].placeholder}
                         value={formData[formFields[formStep].name]}
                         onChange={handleFormChange}
-                        className="mt-1  block w-full rounded-md border-2-gradient-to-r from-purple-500 to-pink-500 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors duration-300"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors duration-300"
                         autoFocus
                       />
                     ) : (
@@ -446,7 +462,7 @@ export default function CityProductPage() {
                         placeholder={formFields[formStep].placeholder}
                         value={formData[formFields[formStep].name]}
                         onChange={handleFormChange}
-                        className="mt-1 p-2 pb-2 pl-2 block border-2-gradient-to-r from-purple-500 to-pink-500 w-full rounded-md shadow-sm focus:border-purple-800 focus:ring-purple-800 transition-colors duration-300"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition-colors duration-300"
                         autoFocus
                       />
                     )}

@@ -1,6 +1,7 @@
 "use client"; // if using Next.js 13+ app directory
 
 import Image from "next/image";
+import { Button } from "./ui/button";
 
 export default function HeroSection({ city, product, description }) {
   return (
@@ -26,9 +27,9 @@ export default function HeroSection({ city, product, description }) {
             <p className="text-xl mb-8 text-gray-200">
               {description || "Discover the finest quality fabrics for your business needs. Trusted by manufacturers worldwide."}
             </p>
-            <button className="btn-primary text-lg px-8 py-4">
+            <Button className="btn-primary text-lg px-8 py-4">
               Request Wholesale Quote
-            </button>
+            </Button>
           </div>
         </div>
       </div>

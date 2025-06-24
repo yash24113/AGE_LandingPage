@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Button } from "./ui/button";
 
 export default function FabricsSection() {
   const categories = [
@@ -65,9 +66,9 @@ export default function FabricsSection() {
                   {category.description}
                 </p>
                 <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button className="w-full btn-primary">
+                  <Button className="w-full btn-primary">
                     View Specifications
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
