@@ -3,6 +3,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Header from "../component/Header";
+import CryptoJS from 'crypto-js';
+import crypto from 'crypto';
 
 // Utility function to capitalize the first letter
 function capitalizeFirst(str) {
@@ -10,9 +12,30 @@ function capitalizeFirst(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
+const ENCRYPTION_KEY = 'A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6'; // 32 chars for AES-256
+
+function decrypt(text) {
+  const [ivBase64, encryptedBase64] = text.split(":");
+  const iv = CryptoJS.enc.Base64.parse(ivBase64);
+  const encrypted = CryptoJS.enc.Base64.parse(encryptedBase64);
+  const decrypted = CryptoJS.AES.decrypt(
+    { ciphertext: encrypted },
+    CryptoJS.enc.Utf8.parse(ENCRYPTION_KEY),
+    { iv }
+  );
+  return decrypted.toString(CryptoJS.enc.Utf8);
+}
+
+function encrypt(text) {
+  const iv = CryptoJS.lib.WordArray.random(16);
+  const encrypted = CryptoJS.AES.encrypt(text, CryptoJS.enc.Utf8.parse(ENCRYPTION_KEY), { iv });
+  // Output IV and ciphertext in base64, separated by ':'
+  return iv.toString(CryptoJS.enc.Base64) + ':' + encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+}
+
 export default function CityProductPage({
-  locations = [],
-  products = [],
+  locations = "",
+  products = "",
   city = "Isanpur",
   product = "Fabric",
   description = "Premium fabric solutions for your business needs",
@@ -59,6 +82,17 @@ export default function CityProductPage({
       placeholder: "Type your message",
     },
   ];
+
+  // Decrypt locations and products
+  const [decryptedLocations, setDecryptedLocations] = useState([]);
+  const [decryptedProducts, setDecryptedProducts] = useState([]);
+
+  useEffect(() => {
+    if (locations && products) {
+      setDecryptedLocations(JSON.parse(decrypt(locations)));
+      setDecryptedProducts(JSON.parse(decrypt(products)));
+    }
+  }, [locations, products]);
 
   // Validation logic
   function validateField(name, value) {
@@ -220,7 +254,7 @@ export default function CityProductPage({
       </Head>
 
       <div className="min-h-screen bg-white text-gray-800">
-        <Header locations={locations} products={products} />
+        <Header locations={decryptedLocations} products={decryptedProducts} />
 
         {/* Product Dropdown - below header */}
         <div className="my-4 flex justify-center">
@@ -228,14 +262,11 @@ export default function CityProductPage({
             value={product}
             onChange={(e) => {
               const selectedProduct = e.target.value;
-              const selectedProductObj = products.find(
-                (prod) => prod.name === selectedProduct
-              );
               router.push(`/${city}/${selectedProduct}`);
             }}
             className="border rounded px-4 py-2"
           >
-            {products.map((prod) => (
+            {decryptedProducts.map((prod) => (
               <option key={prod.slug} value={prod.name}>
                 {prod.name}
               </option>
@@ -787,10 +818,14 @@ export async function getStaticProps({ params }) {
     if (foundLocation) city = foundLocation.name;
   }
 
+  // Encrypt locations and products
+  const encryptedLocations = encrypt(JSON.stringify(locations));
+  const encryptedProducts = encrypt(JSON.stringify(products));
+
   return {
     props: {
-      locations,
-      products,
+      locations: encryptedLocations,
+      products: encryptedProducts,
       city,
       product,
       description,
