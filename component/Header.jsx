@@ -106,22 +106,22 @@ export default function Header({ locations = [], products = [] }) {
                 Products <ChevronDown size={18} className={`transition-transform duration-300 ${productDropdown ? 'rotate-180' : ''}`} />
               </button>
               {productDropdown && (
-                <div className="absolute left-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-purple-100 z-50 max-h-96 overflow-y-auto animate-fade-in">
+                <div className="absolute left-0 mt-2 w-40 border-2 border-purple-800 bg-white rounded-lg shadow-lg border border-purple-100 z-50 max-h-96 overflow-y-auto animate-fade-in">
                   {products.map((product) => (
                     <button
                       key={product.slug}
-                      className="flex items-start gap-3 w-full text-left px-4 py-3 hover:bg-purple-50 text-gray-700 border-b last:border-b-0 border-purple-50 transition-colors duration-300"
+                      className="flex items-start gap-3 w-full text-left px-4 py-3 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 text-gray-700 border-b last:border-b-0 border-purple-50 transition-colors duration-300"
                       onClick={() => handleProductSelect(product.slug)}
                     >
-                      <img
+                      {/* <img
                         src={product.logoUrl || '/favicon.ico'}
                         alt={product.name}
                         className="w-10 h-10 rounded-full object-cover border border-purple-200 bg-white"
                         onError={e => e.target.src = '/favicon.ico'}
-                      />
+                      /> */}
                       <div className="flex-1">
                         <div className="font-semibold text-base">{capitalizeFirst(product.name)}</div>
-                        <div className="text-xs text-gray-500 line-clamp-2">{product.description}</div>
+                        {/* <div className="text-xs text-gray-500 line-clamp-2">{product.description}</div> */}
                       </div>
                     </button>
                   ))}
@@ -141,7 +141,7 @@ export default function Header({ locations = [], products = [] }) {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-gray-700 hover:text-purple-700 transition-colors duration-300"
+            className="md:hidden text-gray-700  hover:text-purple-700 transition-colors duration-300"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle mobile menu"
             aria-expanded={menuOpen}
@@ -164,22 +164,22 @@ export default function Header({ locations = [], products = [] }) {
                 Products <ChevronDown size={18} className={`transition-transform duration-300 ${productDropdown ? 'rotate-180' : ''}`} />
               </button>
               {productDropdown && (
-                <div className="mt-2 w-full bg-white rounded-lg shadow-lg border border-purple-100 z-50 max-h-96 overflow-y-auto animate-slide-up">
+                <div className="mt-2 w-full bg-white border-2 border-purple-800 rounded-lg shadow-lg border border-purple-100 z-50 max-h-96 overflow-y-auto animate-slide-up">
                   {products.map((product) => (
                     <button
                       key={product.slug}
-                      className="flex items-start gap-3 w-full text-left px-4 py-3 hover:bg-purple-50 text-gray-700 border-b last:border-b-0 border-purple-50 transition-colors duration-300"
+                      className="flex items-start gap-3 w-full text-left px-4 py-3 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 text-gray-700 text-gray-700 border-b last:border-b-0 border-purple-50 transition-colors duration-300"
                       onClick={() => handleProductSelect(product.slug)}
                     >
-                      <img
+                      {/* <img
                         src={product.logoUrl || '/favicon.ico'}
                         alt={product.name}
                         className="w-10 h-10 rounded-full object-cover border border-purple-200 bg-white"
                         onError={e => e.target.src = '/favicon.ico'}
-                      />
+                      /> */}
                       <div className="flex-1">
                         <div className="font-semibold text-base">{capitalizeFirst(product.name)}</div>
-                        <div className="text-xs text-gray-500 line-clamp-2">{product.description}</div>
+                        {/* <div className="text-xs text-gray-500 line-clamp-2">{product.description}</div> */}
                       </div>
                     </button>
                   ))}
