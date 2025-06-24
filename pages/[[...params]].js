@@ -184,7 +184,7 @@ export default function CityProductPage() {
       image:
         "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1200&q=80",
       title: "Premium Denim Collection",
-      description: "Wholesale denim fabrics for manufacturers and brands YASHH",
+      description: "Wholesale denim fabrics for manufacturers and brands",
     },
     {
       image:
@@ -302,7 +302,7 @@ export default function CityProductPage() {
     <>
       <Head>
         <title>
-          {`YASH Global Enterprises | Premium ${capitalizeFirst(
+          {`Amrita Global Enterprises | Premium ${capitalizeFirst(
             product
           )} in ${capitalizeFirst(city)}`}
         </title>
