@@ -230,10 +230,7 @@ export default function CityProductPage({
       // --- Google Analytics Event ---
       if (typeof window !== "undefined" && window.gtag) {
         window.gtag('event', 'business_inquiry', {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
+          page_location: window.location.pathname // Optional: track which page
         });
       }
 
