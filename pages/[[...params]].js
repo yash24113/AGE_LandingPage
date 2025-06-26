@@ -226,6 +226,17 @@ export default function CityProductPage({
       setFormStep(0);
       setFormData({ name: "", email: "", phone: "", message: "" });
       setInquiryId(null);
+
+      // --- Google Analytics Event ---
+      if (typeof window !== "undefined" && window.gtag) {
+        window.gtag('event', 'business_inquiry', {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        });
+      }
+
       alert("Inquiry submitted!");
     }
   };
